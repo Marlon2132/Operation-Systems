@@ -30,7 +30,17 @@ int main(int arg_count, char* arg_value[]) {
 
     for (int i = 0; i < count; i++) {
         cout << "Enter <num> <name> <hours> of Employee #" << (i + 1) << ":\n";
-        cin >> e.num >> e.name >> e.hours;
+
+        if (!(cin >> e.num >> e.name >> e.hours)) {
+            cerr << "Input error\n";
+            return 1;
+        }
+        
+        while (e.hours < 0) {
+            cerr << "Invalid record count. It should be >= 0\n";
+            cin >> e.hours;
+        }
+
         ofs.write(reinterpret_cast<char*>(&e), sizeof(e));
     }
 
