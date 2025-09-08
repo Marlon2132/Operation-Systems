@@ -31,7 +31,6 @@ int main(int arg_count, char* arg_value[]) {
     for (int i = 0; i < count; i++) {
         cout << "Enter <num> <name> <hours> of Employee #" << (i + 1) << ":\n";
         cin >> e.num >> e.name >> e.hours;
-
         ofs.write(reinterpret_cast<char*>(&e), sizeof(e));
     }
 
