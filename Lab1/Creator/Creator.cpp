@@ -1,13 +1,9 @@
 ﻿#include <iostream>
 #include <fstream>
 
-using namespace std;
+#include "../Employee/Employee.h"
 
-struct Employee {
-    int num; // Employee identify number
-    char name[10]; // Employee name
-    double hours; // Number of hours worked
-};
+using namespace std;
 
 int main(int arg_count, char* arg_value[]) {
     if (arg_count != 3) {
