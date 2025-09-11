@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string>
 
-#include "../Employee/Employee.h"
+#include "../Employee.h"
 
 using namespace std;
 
@@ -88,6 +88,7 @@ void ShowTextFile(const string& kTxtFile) {
 
 int main() {
     setlocale(LC_ALL, "Russian");
+    setlocale(LC_NUMERIC, "C");
 
     cout << "Enter binary filename and record count: ";
     string kBinFile;

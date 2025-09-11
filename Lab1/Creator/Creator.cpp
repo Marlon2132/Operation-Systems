@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 
-#include "../Employee/Employee.h"
+#include "../Employee.h"
 
 using namespace std;
 
