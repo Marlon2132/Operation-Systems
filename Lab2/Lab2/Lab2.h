@@ -4,14 +4,10 @@
 
 using namespace std;
 
-struct MinMaxArgs {
+struct ProcArgs {
 	vector<long long>* vec;
 	long long min_element;
 	long long max_element;
-};
-
-struct AverageArgs {
-	vector<long long>* vec;
 	long long average;
 };
 

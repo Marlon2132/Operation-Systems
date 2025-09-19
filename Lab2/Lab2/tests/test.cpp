@@ -7,7 +7,7 @@ using namespace std;
 
 TEST(ThreadProc, MinMaxSimpleExample) {
 	vector<long long> v{ 5,2,9,1,7 };
-	MinMaxArgs args{ &v, 0, 0 };
+	ProcArgs args{ &v, NULL, NULL, 0 };
 
 	HANDLE h = CreateThread(nullptr, 0, MinMaxProc, &args, 0, nullptr);
 
@@ -22,7 +22,7 @@ TEST(ThreadProc, MinMaxSimpleExample) {
 
 TEST(ThreadProc, MinMaxSimpleExampleWithNegative) {
 	vector<long long> v{ -1000, 34, 35, -2, 0 , 853, -34 };
-	MinMaxArgs args{ &v, 0, 0 };
+	ProcArgs args{ &v, NULL, NULL, 0 };
 
 	HANDLE h = CreateThread(nullptr, 0, MinMaxProc, &args, 0, nullptr);
 
@@ -37,7 +37,7 @@ TEST(ThreadProc, MinMaxSimpleExampleWithNegative) {
 
 TEST(ThreadProc, MinMaxAllEqualsPositive) {
 	vector<long long> v{ 9, 9, 9, 9, 9, 9, 9 };
-	MinMaxArgs args{ &v, 0, 0 };
+	ProcArgs args{ &v, NULL, NULL, 0 };
 
 	HANDLE h = CreateThread(nullptr, 0, MinMaxProc, &args, 0, nullptr);
 
@@ -52,7 +52,7 @@ TEST(ThreadProc, MinMaxAllEqualsPositive) {
 
 TEST(ThreadProc, MinMaxAllEqualsNegative) {
 	vector<long long> v{ -52, -52, -52, -52, -52, -52, -52, -52, -52};
-	MinMaxArgs args{ &v, 0, 0 };
+	ProcArgs args{ &v, NULL, NULL, 0 };
 
 	HANDLE h = CreateThread(nullptr, 0, MinMaxProc, &args, 0, nullptr);
 
@@ -67,7 +67,7 @@ TEST(ThreadProc, MinMaxAllEqualsNegative) {
 
 TEST(ThreadProc, AverageSimpleExample) {
 	vector<long long> v{ 1,2,3,4 };
-	AverageArgs args{ &v, 0 };
+	ProcArgs args{ &v, NULL, NULL, 0 };
 
 	HANDLE h = CreateThread(nullptr, 0, AverageProc, &args, 0, nullptr);
 
@@ -81,7 +81,7 @@ TEST(ThreadProc, AverageSimpleExample) {
 
 TEST(ThreadProc, AverageSimpleExampleWithNegative) {
 	vector<long long> v{ 5, 3, -7, 9, 8 };
-	AverageArgs args{ &v, 0 };
+	ProcArgs args{ &v, NULL, NULL, 0 };
 
 	HANDLE h = CreateThread(nullptr, 0, AverageProc, &args, 0, nullptr);
 
@@ -95,7 +95,7 @@ TEST(ThreadProc, AverageSimpleExampleWithNegative) {
 
 TEST(ThreadProc, AverageAllNegative) {
 	vector<long long> v{ -500, -200, -3, -2, -780 };
-	AverageArgs args{ &v, 0 };
+	ProcArgs args{ &v, NULL, NULL, 0 };
 
 	HANDLE h = CreateThread(nullptr, 0, AverageProc, &args, 0, nullptr);
 

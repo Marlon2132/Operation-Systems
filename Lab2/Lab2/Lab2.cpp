@@ -8,7 +8,7 @@
 using namespace std;
 
 DWORD WINAPI MinMaxProc(LPVOID lpParam) {
-	auto args = static_cast<MinMaxArgs*>(lpParam);
+	auto args = static_cast<ProcArgs*>(lpParam);
 	vector<long long>& vec = *args->vec;
 	args->max_element = vec[0];
 	args->min_element = vec[0];
@@ -31,7 +31,7 @@ DWORD WINAPI MinMaxProc(LPVOID lpParam) {
 }
 
 DWORD WINAPI AverageProc(LPVOID lpParam) {
-	auto args = static_cast<AverageArgs*>(lpParam);
+	auto args = static_cast<ProcArgs*>(lpParam);
 	vector<long long>& vec = *args->vec;
 	args->average = 0;
 
@@ -70,17 +70,15 @@ int main() {
 			cin >> arr[i];
 		}
 
-		MinMaxArgs min_max_args{ &arr, NULL, NULL };
+		ProcArgs proc_args{ &arr, NULL, NULL, NULL };
 
-		HANDLE min_max_thread = CreateThread(NULL, 0, MinMaxProc, &min_max_args, 0, NULL);
+		HANDLE min_max_thread = CreateThread(NULL, 0, MinMaxProc, &proc_args, 0, NULL);
 
 		if (NULL == min_max_thread) {
 			throw runtime_error("Min-max thread wasn't created.");
 		}
 
-		AverageArgs average_args{ &arr, NULL };
-
-		HANDLE average_thread = CreateThread(NULL, 0, AverageProc, &average_args, 0, NULL);
+		HANDLE average_thread = CreateThread(NULL, 0, AverageProc, &proc_args, 0, NULL);
 
 		if (NULL == average_thread) {
 			throw runtime_error("Average thread wasn't created.");
@@ -91,8 +89,8 @@ int main() {
 		CloseHandle(min_max_thread);
 		CloseHandle(average_thread);
 
-		replace(arr.begin(), arr.end(), min_max_args.max_element, average_args.average);
-		replace(arr.begin(), arr.end(), min_max_args.min_element, average_args.average);
+		replace(arr.begin(), arr.end(), proc_args.max_element, proc_args.average);
+		replace(arr.begin(), arr.end(), proc_args.min_element, proc_args.average);
 
 		cout << endl << "Array of elements:" << endl;
 
