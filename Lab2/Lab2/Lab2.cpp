@@ -18,7 +18,7 @@ DWORD WINAPI MinMaxProc(LPVOID lpParam) {
 			args->max_element = x;
 		}
 		else if (args->min_element > x) {
-			args->max_element = x;
+			args->min_element = x;
 		}
 
 		Sleep(7);

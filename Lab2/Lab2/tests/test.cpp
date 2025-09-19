@@ -104,5 +104,5 @@ TEST(ThreadProc, AverageAllNegative) {
 	WaitForSingleObject(h, INFINITE);
 	CloseHandle(h);
 
-	EXPECT_EQ(args.average, 3);
+	EXPECT_EQ(args.average, -297);
 }
