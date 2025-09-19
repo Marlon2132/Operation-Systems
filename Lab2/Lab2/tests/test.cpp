@@ -6,7 +6,7 @@
 using namespace std;
 
 TEST(ThreadProc, MinMaxSimpleExample) {
-	vector<int> v{ 5,2,9,1,7 };
+	vector<long long> v{ 5,2,9,1,7 };
 	MinMaxArgs args{ &v, 0, 0 };
 
 	HANDLE h = CreateThread(nullptr, 0, MinMaxProc, &args, 0, nullptr);
@@ -21,7 +21,7 @@ TEST(ThreadProc, MinMaxSimpleExample) {
 }
 
 TEST(ThreadProc, MinMaxSimpleExampleWithNegative) {
-	vector<int> v{ -1000, 34, 35, -2, 0 , 853, -34 };
+	vector<long long> v{ -1000, 34, 35, -2, 0 , 853, -34 };
 	MinMaxArgs args{ &v, 0, 0 };
 
 	HANDLE h = CreateThread(nullptr, 0, MinMaxProc, &args, 0, nullptr);
@@ -36,7 +36,7 @@ TEST(ThreadProc, MinMaxSimpleExampleWithNegative) {
 }
 
 TEST(ThreadProc, MinMaxAllEqualsPositive) {
-	vector<int> v{ 9, 9, 9, 9, 9, 9, 9 };
+	vector<long long> v{ 9, 9, 9, 9, 9, 9, 9 };
 	MinMaxArgs args{ &v, 0, 0 };
 
 	HANDLE h = CreateThread(nullptr, 0, MinMaxProc, &args, 0, nullptr);
@@ -51,7 +51,7 @@ TEST(ThreadProc, MinMaxAllEqualsPositive) {
 }
 
 TEST(ThreadProc, MinMaxAllEqualsNegative) {
-	vector<int> v{ -52, -52, -52, -52, -52, -52, -52, -52, -52};
+	vector<long long> v{ -52, -52, -52, -52, -52, -52, -52, -52, -52};
 	MinMaxArgs args{ &v, 0, 0 };
 
 	HANDLE h = CreateThread(nullptr, 0, MinMaxProc, &args, 0, nullptr);
@@ -66,7 +66,7 @@ TEST(ThreadProc, MinMaxAllEqualsNegative) {
 }
 
 TEST(ThreadProc, AverageSimpleExample) {
-	vector<int> v{ 1,2,3,4 };
+	vector<long long> v{ 1,2,3,4 };
 	AverageArgs args{ &v, 0 };
 
 	HANDLE h = CreateThread(nullptr, 0, AverageProc, &args, 0, nullptr);
@@ -80,7 +80,7 @@ TEST(ThreadProc, AverageSimpleExample) {
 }
 
 TEST(ThreadProc, AverageSimpleExampleWithNegative) {
-	vector<int> v{ 5, 3, -7, 9, 8 };
+	vector<long long> v{ 5, 3, -7, 9, 8 };
 	AverageArgs args{ &v, 0 };
 
 	HANDLE h = CreateThread(nullptr, 0, AverageProc, &args, 0, nullptr);
@@ -94,7 +94,7 @@ TEST(ThreadProc, AverageSimpleExampleWithNegative) {
 }
 
 TEST(ThreadProc, AverageAllNegative) {
-	vector<int> v{ -500, -200, -3, -2, -780 };
+	vector<long long> v{ -500, -200, -3, -2, -780 };
 	AverageArgs args{ &v, 0 };
 
 	HANDLE h = CreateThread(nullptr, 0, AverageProc, &args, 0, nullptr);

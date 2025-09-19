@@ -5,14 +5,14 @@
 using namespace std;
 
 struct MinMaxArgs {
-	vector<int>* vec;
-	int min_element;
-	int max_element;
+	vector<long long>* vec;
+	long long min_element;
+	long long max_element;
 };
 
 struct AverageArgs {
-	vector<int>* vec;
-	int average;
+	vector<long long>* vec;
+	long long average;
 };
 
 DWORD WINAPI MinMaxProc(LPVOID lpParam);

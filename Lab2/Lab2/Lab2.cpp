@@ -9,11 +9,11 @@ using namespace std;
 
 DWORD WINAPI MinMaxProc(LPVOID lpParam) {
 	auto args = static_cast<MinMaxArgs*>(lpParam);
-	vector<int>& vec = *args->vec;
+	vector<long long>& vec = *args->vec;
 	args->max_element = vec[0];
 	args->min_element = vec[0];
 
-	for (int x : vec) {
+	for (long long x : vec) {
 		if (args->max_element < x) {
 			args->max_element = x;
 		}
@@ -32,15 +32,15 @@ DWORD WINAPI MinMaxProc(LPVOID lpParam) {
 
 DWORD WINAPI AverageProc(LPVOID lpParam) {
 	auto args = static_cast<AverageArgs*>(lpParam);
-	vector<int>& vec = *args->vec;
+	vector<long long>& vec = *args->vec;
 	args->average = 0;
 
-	for (int x : vec) {
+	for (long long x : vec) {
 		args->average += x;
 		Sleep(12);
 	}
 
-	args->average /= static_cast<int>(vec.size());
+	args->average /= static_cast<long>(vec.size());
 
 	cout << endl << "Avg of elements: " << args->average << endl;
 
@@ -52,7 +52,7 @@ int main() {
 	try {
 		cin.exceptions(ios::failbit | ios::badbit);
 
-		int n;
+		long n;
 		cout << "Enter the count of elements: ";
 
 		cin >> n;
@@ -62,11 +62,11 @@ int main() {
 			cin >> n;
 		}
 
-		vector<int> arr(n);
+		vector<long long> arr(n);
 
 		cout << "Enter the array elements:" << endl;
 
-		for (int i = 0; i < n; i++) {
+		for (long i = 0; i < n; i++) {
 			cin >> arr[i];
 		}
 
@@ -96,7 +96,7 @@ int main() {
 
 		cout << endl << "Array of elements:" << endl;
 
-		for (int x : arr) {
+		for (long long x : arr) {
 			cout << x << endl;
 		}
 
