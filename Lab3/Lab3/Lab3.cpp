@@ -4,7 +4,6 @@ using namespace std;
 
 int main() {
 	try {
-
 		cin.exceptions(ios::failbit | ios::badbit);
 		cout << "Enter size of array: ";
 		unsigned int n_arr;
