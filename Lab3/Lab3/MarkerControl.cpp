@@ -1,6 +1,6 @@
 #include "MarkerControl.h"
 
-MarkerControl::MarkerControl(unsigned int id) : id_(id) {
+MarkerControl::MarkerControl(unsigned int id, vector<int>& arr) : id_(id), arr_(arr) {
 	startEvent_ = CreateEvent(
 		NULL,
 		TRUE,
@@ -19,6 +19,34 @@ MarkerControl::MarkerControl(unsigned int id) : id_(id) {
 		0,
 		NULL
 	);
+	cannotProceedEvent_ = CreateEvent(
+		NULL,
+		TRUE,
+		FALSE,
+		NULL);
+	continueEvent_ = CreateEvent(
+		NULL,
+		FALSE,
+		FALSE,
+		NULL);
+}
+
+MarkerControl::~MarkerControl() {
+	if (startEvent_) {
+		CloseHandle(startEvent_);
+	}
+
+	if (stopEvent_) {
+		CloseHandle(stopEvent_);
+	}
+	
+	if (cannotProceedEvent_) {
+		CloseHandle(cannotProceedEvent_);
+	}
+
+	if (continueEvent_) {
+		CloseHandle(continueEvent_);
+	}
 }
 
 DWORD WINAPI MarkerControl::ThreadProc(LPVOID param) {
@@ -28,15 +56,50 @@ DWORD WINAPI MarkerControl::ThreadProc(LPVOID param) {
 DWORD MarkerControl::marker() {
 	// Waiting for the "START" signal from main
 	WaitForSingleObject(startEvent_, INFINITE);
-	cout << "Marker " << id_ << " started\n";
+	cout << "Marker " << id_ << " started" << endl;
 
-	// until STOP
-	while (WaitForSingleObject(stopEvent_, 0) == WAIT_TIMEOUT) {
-		// marker logic hasn't been implemented yet
-		Sleep(100);
+	srand(id_);
+
+	unsigned placed_count = 0;
+
+	while (true) {
+		int idx = rand() % arr_.size();
+
+		if (arr_[idx] == 0) {
+			placed_count++;
+			Sleep(5);
+			arr_[idx] = id_;
+			Sleep(5);
+			continue;
+		}
+		else {
+			cout << "Marker " << id_
+				<< ", placed=" << placed_count
+				<< ", conflict at index=" << idx
+				<< endl;
+			this->cannotProceed();
+		}
+
+		SetEvent(cannotProceedEvent_);
+		HANDLE h[2] = { continueEvent_, stopEvent_ };
+		DWORD ans = WaitForMultipleObjects(2, h, FALSE, INFINITE);
+
+		if (ans == WAIT_OBJECT_0) {
+			continue;
+		}
+		else {
+			break;
+		}
 	}
 
-	cout << "Marker " << id_ << " exiting\n";
+	/*for (int& v : arr_) {
+		if (v == id_) {
+			v = 0;
+		}
+	}*/
+
+	cout << "Marker " << id_ << " exiting. Total placed=" << placed_count << endl;
+
 	return 0;
 }
 
@@ -51,6 +114,43 @@ HANDLE MarkerControl::getStartEvent() {
 HANDLE MarkerControl::getStopEvent() {
 	return stopEvent_;
 }
+
 HANDLE MarkerControl::getThreadHandle() {
 	return threadHandle_;
+}
+
+HANDLE MarkerControl::getÑannotProceedEvent() {
+	return cannotProceedEvent_;
+}
+
+HANDLE MarkerControl::getContinueEvent() {
+	return continueEvent_;
+}
+
+void MarkerControl::start() {
+	SetEvent(startEvent_);
+}
+
+void MarkerControl::stop() {
+	SetEvent(stopEvent_);
+}
+
+void MarkerControl::join() {
+	if (threadHandle_) {
+		WaitForSingleObject(threadHandle_, INFINITE);
+		CloseHandle(threadHandle_);
+		threadHandle_ = NULL;
+	}
+}
+
+void MarkerControl::reset() {
+	ResetEvent(cannotProceedEvent_);
+}
+
+void MarkerControl::contin() {
+	SetEvent(continueEvent_);
+}
+
+void MarkerControl::cannotProceed() {
+	SetEvent(cannotProceedEvent_);
 }
