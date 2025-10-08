@@ -58,6 +58,11 @@ int main() {
 			cout << "Enter the sequence number of the marker thread that will be signaled to terminate its operation:" << endl;
 			unsigned int id;
 			cin >> id;
+
+			if (id < 1 or id > threads.size()) {
+				throw std::out_of_range("Invalid marker id");
+			}
+
 			MarkerControl* victim = threads[id - 1];
 			victim->stop();
 			victim->join();

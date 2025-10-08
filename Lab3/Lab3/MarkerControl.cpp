@@ -80,7 +80,6 @@ DWORD MarkerControl::marker() {
 			this->cannotProceed();
 		}
 
-		SetEvent(cannotProceedEvent_);
 		HANDLE h[2] = { continueEvent_, stopEvent_ };
 		DWORD ans = WaitForMultipleObjects(2, h, FALSE, INFINITE);
 
@@ -92,11 +91,11 @@ DWORD MarkerControl::marker() {
 		}
 	}
 
-	/*for (int& v : arr_) {
+	for (int& v : arr_) {
 		if (v == id_) {
 			v = 0;
 		}
-	}*/
+	}
 
 	cout << "Marker " << id_ << " exiting. Total placed=" << placed_count << endl;
 
