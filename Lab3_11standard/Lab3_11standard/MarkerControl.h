@@ -28,6 +28,9 @@ private:
     static boost::condition_variable conflictCv_;
     static unsigned int conflictCount_;
 
+    static boost::mutex arrMtx_;
+    static bool firstConflictReported_;
+
 public:
     MarkerControl(unsigned int id, vector<int>& arr);
     ~MarkerControl();

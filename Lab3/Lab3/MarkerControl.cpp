@@ -1,4 +1,7 @@
 #include "MarkerControl.h"
+#include "Lab3.h"
+
+static bool firstConflictReported = false;
 
 MarkerControl::MarkerControl(unsigned int id, vector<int>& arr) : id_(id), arr_(arr) {
 	startEvent_ = CreateEvent(
@@ -56,40 +59,49 @@ DWORD WINAPI MarkerControl::ThreadProc(LPVOID param) {
 DWORD MarkerControl::marker() {
 	// Waiting for the "START" signal from main
 	WaitForSingleObject(startEvent_, INFINITE);
+	WaitForSingleObject(arrMutex, INFINITE);
 	cout << "Marker " << id_ << " started" << endl;
-
+	ReleaseMutex(arrMutex);
 	srand(id_);
-
 	unsigned placed_count = 0;
 
 	while (true) {
 		int idx = rand() % arr_.size();
+		WaitForSingleObject(arrMutex, INFINITE);
 
 		if (arr_[idx] == 0) {
 			placed_count++;
 			Sleep(5);
 			arr_[idx] = id_;
 			Sleep(5);
+			ReleaseMutex(arrMutex);
 			continue;
 		}
-		else {
+
+		if (!firstConflictReported) {
+			firstConflictReported = true;
 			cout << "Marker " << id_
 				<< ", placed=" << placed_count
 				<< ", conflict at index=" << idx
 				<< endl;
-			this->cannotProceed();
 		}
+
+		ReleaseMutex(arrMutex);
+		this->cannotProceed();
 
 		HANDLE h[2] = { continueEvent_, stopEvent_ };
 		DWORD ans = WaitForMultipleObjects(2, h, FALSE, INFINITE);
 
 		if (ans == WAIT_OBJECT_0) {
+			firstConflictReported = false;
 			continue;
 		}
 		else {
 			break;
 		}
 	}
+
+	WaitForSingleObject(arrMutex, INFINITE);
 
 	for (int& v : arr_) {
 		if (v == id_) {
@@ -98,6 +110,7 @@ DWORD MarkerControl::marker() {
 	}
 
 	cout << "Marker " << id_ << " exiting. Total placed=" << placed_count << endl;
+	ReleaseMutex(arrMutex);
 
 	return 0;
 }

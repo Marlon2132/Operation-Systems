@@ -3,6 +3,12 @@
 
 using namespace std;
 
+HANDLE arrMutex = CreateMutex(
+	NULL,
+	FALSE,
+	NULL
+);
+
 void showIntArr(vector<int>& arr, bool after) {
 	cout << "Arr state" << (after ? " after removal:" : ":") << endl;
 
@@ -61,7 +67,7 @@ int main() {
 			auto it = find_if(threads.begin(), threads.end(), [id](MarkerControl* t) { return t->getId() == id; });
 
 			if (it == threads.end()) {
-				throw std::out_of_range("Invalid marker id");
+				throw out_of_range("Invalid marker id");
 			}
 
 			MarkerControl* victim = *it;
@@ -76,6 +82,8 @@ int main() {
 				t->contin();
 			}
 		}
+
+		CloseHandle(arrMutex);
 
 		/*while (true) {
 			vector<HANDLE> stopEvents;

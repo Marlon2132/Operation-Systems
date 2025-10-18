@@ -5,6 +5,8 @@ using namespace std;
 boost::mutex MarkerControl::conflictMtx_;
 boost::condition_variable MarkerControl::conflictCv_;
 unsigned int MarkerControl::conflictCount_ = 0;
+boost::mutex MarkerControl::arrMtx_;
+bool MarkerControl::firstConflictReported_ = false;
 
 MarkerControl::MarkerControl(unsigned int id, vector<int>& arr) :
     id_(id),
@@ -29,7 +31,7 @@ unsigned int MarkerControl::getId() const {
 }
 
 void MarkerControl::start() {
-    boost::mutex::scoped_lock lk(startMtx_);
+    boost::mutex::scoped_lock startLock(startMtx_);
     started_ = true;
     startCv_.notify_one();
 }
@@ -54,39 +56,49 @@ void MarkerControl::join() {
 
 void MarkerControl::marker() {
     // Waiting for the "START" signal from main
-    boost::mutex::scoped_lock lk(startMtx_);
-    startCv_.wait(lk, [this] { return started_; });
+    {
+        boost::mutex::scoped_lock startLock(startMtx_);
+        startCv_.wait(startLock, [this] { return started_; });
+    }
     /*WaitForSingleObject(startEvent_, INFINITE);*/
     cout << "Marker " << id_ << " started" << endl;
-
     srand(id_);
-
     unsigned placed_count = 0;
 
     while (true) {
         int idx = rand() % arr_.size();
+        {
+            boost::mutex::scoped_lock arrLock(arrMtx_);
 
-        if (arr_[idx] == 0) {
-            placed_count++;
-            boost::this_thread::sleep_for(boost::chrono::milliseconds(5)); // Sleep(5);
-            arr_[idx] = id_;
-            boost::this_thread::sleep_for(boost::chrono::milliseconds(5));
-            continue;
+            if (arr_[idx] == 0) {
+                placed_count++;
+                boost::this_thread::sleep_for(boost::chrono::milliseconds(5)); // Sleep(5);
+                arr_[idx] = id_;
+                boost::this_thread::sleep_for(boost::chrono::milliseconds(5));
+                continue;
 
+            }
+
+            if (!firstConflictReported_) {
+                firstConflictReported_ = true;
+                cout << "Marker " << id_
+                    << ", placed=" << placed_count
+                    << ", conflict at index=" << idx
+                    << endl;
+                //this->cannotProceed();
+            }
         }
-        else {
-            cout << "Marker " << id_
-                << ", placed=" << placed_count
-                << ", conflict at index=" << idx
-                << endl;
-            boost::mutex::scoped_lock lk(conflictMtx_);
+
+        {
+            boost::mutex::scoped_lock conflictLock(conflictMtx_);
             conflictCount_++;
             conflictCv_.notify_one();
-            //this->cannotProceed();
         }
 
-        boost::mutex::scoped_lock lk(mtx_);
-        cv_.wait(lk, [this] { return continueFlag_ || stopFlag_; });
+        {
+            boost::mutex::scoped_lock controlLock(mtx_);
+            cv_.wait(controlLock, [this] { return continueFlag_ || stopFlag_; });
+        }
 
         if (stopFlag_) {
             break;
@@ -105,13 +117,17 @@ void MarkerControl::marker() {
         }*/
     }
 
-    for (int& v : arr_) {
-        if (v == id_) {
-            v = 0;
-        }
-    }
+    {
+        boost::mutex::scoped_lock arrLock(arrMtx_);
 
-    cout << "Marker " << id_ << " exiting. Total placed=" << placed_count << endl;
+        for (int& v : arr_) {
+            if (v == id_) {
+                v = 0;
+            }
+        }
+
+        cout << "Marker " << id_ << " exiting. Total placed=" << placed_count << endl;
+    }
 }
 
 void MarkerControl::waitAllConflicts(unsigned int count) {
@@ -120,6 +136,8 @@ void MarkerControl::waitAllConflicts(unsigned int count) {
 }
 
 void MarkerControl::resetConflicts() {
-    boost::mutex::scoped_lock lk(conflictMtx_);
+    boost::mutex::scoped_lock conflictLock(conflictMtx_);
     conflictCount_ = 0;
+    boost::mutex::scoped_lock arrLock(arrMtx_);
+    firstConflictReported_ = false;
 }
