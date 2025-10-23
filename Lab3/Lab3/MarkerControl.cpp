@@ -1,7 +1,7 @@
-#include "MarkerControl.h"
+﻿#include "MarkerControl.h"
 #include "Lab3.h"
 
-static bool firstConflictReported = false;
+//static bool firstConflictReported = false;
 
 MarkerControl::MarkerControl(unsigned int id, vector<int>& arr) : id_(id), arr_(arr) {
 	startEvent_ = CreateEvent(
@@ -78,8 +78,7 @@ DWORD MarkerControl::marker() {
 			continue;
 		}
 
-		if (!firstConflictReported) {
-			firstConflictReported = true;
+		else {
 			cout << "Marker " << id_
 				<< ", placed=" << placed_count
 				<< ", conflict at index=" << idx
@@ -131,7 +130,7 @@ HANDLE MarkerControl::getThreadHandle() {
 	return threadHandle_;
 }
 
-HANDLE MarkerControl::get�annotProceedEvent() {
+HANDLE MarkerControl::getСannotProceedEvent() {
 	return cannotProceedEvent_;
 }
 
