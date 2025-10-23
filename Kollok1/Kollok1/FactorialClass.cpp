@@ -36,3 +36,11 @@ void FactorialClass::setFactValue(unsigned long long n) {
 unsigned long long FactorialClass::getFactValue() {
 	return fact_value_;
 }
+
+unsigned long long FactorialClass::fact(unsigned long long n) {
+	if (n == 0) {
+		return 1;
+	}
+
+	return fact(n - 1) * n;
+}

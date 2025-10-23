@@ -13,4 +13,6 @@ public:
 
 	void setFactValue(unsigned long long fact_value);
 	unsigned long long getFactValue();
+
+	unsigned long long fact(unsigned long long n);
 };
