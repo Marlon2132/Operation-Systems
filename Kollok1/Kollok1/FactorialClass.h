@@ -1,18 +1,18 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
 class FactorialClass {
 private:
 	long long n_;
-	unsigned long long fact_value_;
+	vector<unsigned long long> fact_values_;
 
 public:
 	void setN(long long n);
-	long long getN();
+	const long long getN();
 
-	void setFactValue(unsigned long long fact_value);
-	unsigned long long getFactValue();
-
-	unsigned long long fact(unsigned long long n);
+	void fillFactValues();
+	const vector<unsigned long long>& getFactValues() const;
+	void showFactValues();
 };
