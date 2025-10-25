@@ -10,7 +10,10 @@ int main() {
 		cin >> n;
 		
 		FactorialClass fact_obj;
+
 		fact_obj.setN(n);
+		fact_obj.fillFactValues();
+		fact_obj.showFactValues();
 	}
 	catch (const ios_base::failure& e) {
 		cerr << "Input error: invalid format." << endl;

@@ -3,83 +3,53 @@
 using namespace std;
 
 void FactorialClass::setN(long long n) {
-	try {
-		if (n <= 0) {
-			throw invalid_argument("n should be natural!");
-		}
-		else {
-			this->n_ = n;
-		}
+	if (n <= 0) {
+		throw invalid_argument("[FactorialClass::setN] -> n should be natural!");
 	}
-	catch (const exception& e) {
-		cerr << "Error [FactorialClass::setN]: " << e.what() << endl;
-
-		return;
+	else if (n > 20) {
+		throw out_of_range("[FactorialClass::setN] -> n should be <= 20");
+	}
+	else {
+		n_ = n;
 	}
 }
 
-const long long FactorialClass::getN() {
-	try {
-		return n_;
-	}
-	catch (const exception& e) {
-		cerr << "Error [FactorialClass::getN]: " << e.what() << endl;
-
-		return;
-	}
+const unsigned char FactorialClass::getN() const {
+	return n_;
 }
 
 void FactorialClass::fillFactValues() {
-	try {
-		if (n_ <= 0) {
-			throw invalid_argument("n should be natural!");
-		}
-		else {
-			this->fact_values_.clear();
-			this->fact_values_.reserve(n_);
-
-			this->fact_values_[0] = 1;
-
-			for (unsigned long long i = 1; i < n_; i++) {
-				this->fact_values_[i] = this->fact_values_[i - 1] * (i + 1);
-			}
-		}
+	if (!n_) {
+		throw invalid_argument("[FactorialClass::fillFactValues] -> n should be entered before filling!");
 	}
-	catch (const exception& e) {
-		cerr << "Error [FactorialClass::fillFactValues]: " << e.what() << endl;
+	else {
+		fact_values_.clear();
+		fact_values_.resize(n_);
 
-		return;
+		fact_values_[0] = 1;
+
+		for (unsigned char i = 1; i < n_; i++) {
+			fact_values_[i] = fact_values_[i - 1] * (i + 1);
+		}
 	}
 }
 
 const vector<unsigned long long>& FactorialClass::getFactValues() const {
-	try {
-		return fact_values_;
+	if (fact_values_.empty()) {
+		throw logic_error("[FactorialClass::getFactValues] -> fact_values is empty");
 	}
-	catch (const exception& e) {
-		cerr << "Error [FactorialClass::getFactValues]: " << e.what() << endl;
-
-		return;
+	else {
+		return fact_values_;
 	}
 }
 
 void FactorialClass::showFactValues() {
-	try {
-		if (fact_values_.empty()) {
-			cout << "Your fact_values array is empty!";
-		}
-		else {
-			cout << "Your fact_values array" << endl
-				<< "======================" << endl;
+	vector<unsigned long long> vec = this->getFactValues();
 
-			for (unsigned long long x : fact_values_) {
-				cout << x << endl;
-			}
-		}
-	}
-	catch (const exception& e) {
-		cerr << "Error [FactorialClass::getFactValues]: " << e.what() << endl;
+	cout << endl << "Your fact_values array" << endl
+		<< "======================" << endl;
 
-		return;
+	for (unsigned long long x : vec) {
+		cout << x << endl;
 	}
 }
