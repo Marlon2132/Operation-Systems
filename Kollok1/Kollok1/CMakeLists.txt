@@ -17,6 +17,7 @@ enable_testing()
 add_library(Kollok1Lib STATIC
   FactorialClass.cpp
   VecClass.cpp
+  LinkedList.cpp
 )
 target_compile_definitions(Kollok1Lib PRIVATE BUILDING_FOR_TESTS)
 target_include_directories(Kollok1Lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

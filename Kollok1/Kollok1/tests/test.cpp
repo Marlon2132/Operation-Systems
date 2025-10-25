@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "FactorialClass.h"
 #include "VecClass.h"
+#include "LinkedList.h"
 
 using namespace std;
 
@@ -169,4 +170,75 @@ TEST(VecClassTest, fillSetArr___AllEqualAndSingle) {
     ASSERT_EQ(s2.size(), 1);
 
     EXPECT_EQ(s2[0], -0.125);
+}
+
+TEST(LinkedListTest, push_back___ProducesCorrectSequence) {
+    LinkedList L;
+
+    L.push_back(1.5);
+    L.push_back(2.25);
+    L.push_back(3);
+
+    vector<long double> expected = { 1.5, 2.25, 3 };
+
+    EXPECT_EQ(L.toVector(), expected);
+}
+
+TEST(LinkedListTest, clear___MakesListEmpty) {
+    LinkedList L;
+
+    L.push_back(10);
+    L.push_back(20);
+
+    L.clear();
+
+    vector<long double> expected_empty;
+
+    EXPECT_EQ(L.toVector(), expected_empty);
+}
+
+TEST(LinkedListTest, recReverse___ReversesOrder) {
+    LinkedList L;
+
+    L.push_back(1);
+    L.push_back(2);
+    L.push_back(3);
+    L.push_back(4);
+
+    vector<long double> before = L.toVector();
+    vector<long double> expected_before = { 1, 2, 3, 4 };
+
+    EXPECT_EQ(before, expected_before);
+
+    L.recReverse();
+
+    vector<long double> after = L.toVector();
+    vector<long double> expected_after = { 4, 3, 2, 1 };
+
+    EXPECT_EQ(after, expected_after);
+}
+
+TEST(LinkedListTest, recReverse___SingleElement) {
+    LinkedList L;
+
+    L.push_back(42);
+
+    L.recReverse();
+
+    vector<long double> expected{ 42 };
+
+    EXPECT_EQ(L.toVector(), expected);
+}
+
+TEST(LinkedListTest, recReverse___TwoElement) {
+    LinkedList L;
+
+    L.push_back(7);
+    L.push_back(8);
+
+    L.recReverse();
+
+    vector<long double> expected{ 8, 7 };
+
+    EXPECT_EQ(L.toVector(), expected);
 }

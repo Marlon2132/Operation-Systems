@@ -1,5 +1,6 @@
 ﻿#include "Kollok1.h"
 #include "VecClass.h"
+#include "LinkedList.h"
 
 using namespace std;
 
@@ -38,6 +39,38 @@ int main() {
 
 		v.fillSetArr();
 		v.showSetArr();
+
+		//Task3
+		long long linked_list_len;
+
+		cout << endl << endl
+			<< endl << "Enter the natural length of linked list: ";
+		cin >> linked_list_len;
+
+		if (linked_list_len <= 0) {
+			throw invalid_argument("[main] -> linked_list length should be > 0");
+		}
+		else {
+			LinkedList list;
+			long double y;
+
+			cout << endl << "Enter the list of long double ("
+				<< linked_list_len << " elements):" << endl;
+			
+			for (unsigned long long i = 0; i < linked_list_len; i++) {
+				cin >> y;
+				list.push_back(y);
+			}
+
+			list.print();
+
+			cout << endl << "Reversing..." << endl;
+
+			list.recReverse();
+
+			list.print();
+		}
+
 	}
 	catch (const ios_base::failure& e) {
 		cerr << "Input error: invalid format." << endl;
