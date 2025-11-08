@@ -1,12 +1,20 @@
-﻿# CMakeList.txt: проект CMake для Lab4; включите исходный код и определения,
-# укажите здесь логику для конкретного проекта.
-#
+﻿cmake_minimum_required(VERSION 3.12)
+project(Lab4 LANGUAGES CXX)
 
-# Добавьте источник в исполняемый файл этого проекта.
-add_executable (Lab4 "Receiver.cpp"  "utils/input_parsing.cpp" "utils/message_queue.h" "utils/message_queue.cpp" "Sender.cpp")
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET Lab4 PROPERTY CXX_STANDARD 20)
-endif()
+# Библиотека utils
+add_library(utils STATIC
+    utils/message_queue.cpp
+    utils/input_parsing.cpp
+)
 
-# TODO: Добавьте тесты и целевые объекты, если это необходимо.
+target_include_directories(utils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/utils)
+
+# Два отдельных исполняемых файла
+add_executable(Receiver Receiver.cpp)
+target_link_libraries(Receiver PRIVATE utils)
+
+add_executable(Sender Sender.cpp)
+target_link_libraries(Sender PRIVATE utils)
