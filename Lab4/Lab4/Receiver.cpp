@@ -33,4 +33,12 @@ int main(int argc, char** argv) {
 
     cout << "Enter the number of sender processes:" << endl;
     cin >> temp_string;
+
+    while (!CheckIfUnsignedShort(temp_string, false)) {
+        cout << "Enter the number of sender processes:" << endl;
+        cin >> temp_string;
+    }
+
+    unsigned short number_of_senders;
+    number_of_senders = static_cast<unsigned short>(stoi(temp_string));
 }
