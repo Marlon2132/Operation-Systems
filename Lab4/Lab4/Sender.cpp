@@ -1,3 +1,5 @@
+#include "utils/input_parsing.h"
+
 #include <iostream>
 #include <string>
 #include <windows.h>
@@ -27,4 +29,11 @@ int main(int argc, char** argv) {
     string temp_string;
     cout << "Enter 0 to exit, otherwise enter a number of messages to send: ";
     cin >> temp_string;
+
+    while (!CheckIfUnsignedShort(temp_string, false)) {
+        cout << "Enter 0 to exit, otherwise enter a number of messages to send: ";
+        cin >> temp_string;
+    }
+
+    unsigned short user_input = static_cast<unsigned short>(stoi(temp_string));
 }
