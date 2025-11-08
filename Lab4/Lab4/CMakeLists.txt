@@ -3,7 +3,7 @@
 #
 
 # Добавьте источник в исполняемый файл этого проекта.
-add_executable (Lab4 "Receiver.cpp"  "utils/input_parsing.cpp")
+add_executable (Lab4 "Receiver.cpp"  "utils/input_parsing.cpp" "utils/message_queue.h" "utils/message_queue.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Lab4 PROPERTY CXX_STANDARD 20)
