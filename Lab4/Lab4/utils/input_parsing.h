@@ -12,3 +12,4 @@ constexpr const char* kForbiddenFileNames4[] = { "COM1","COM2","COM3","COM4","CO
 
 bool CheckFileName(std::string file_name, std::string required_postfix = "", bool verbose = false);
 bool CheckIfPositiveLong(std::string str, bool verbose = false);
+bool CheckIfUnsignedShort(std::string str, bool verbose = false);
