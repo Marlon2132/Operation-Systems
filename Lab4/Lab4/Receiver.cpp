@@ -1,4 +1,5 @@
 ﻿#include "utils/input_parsing.h"
+#include "utils/message_queue.h"
 
 #include <iostream>
 #include <string>
@@ -27,4 +28,9 @@ int main(int argc, char** argv) {
 
     long number_of_entries;
     number_of_entries = stol(temp_string);
+
+    MessageQueue queue(file_name, number_of_entries, true);
+
+    cout << "Enter the number of sender processes:" << endl;
+    cin >> temp_string;
 }
