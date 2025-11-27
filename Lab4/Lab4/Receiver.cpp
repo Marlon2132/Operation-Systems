@@ -18,11 +18,11 @@ int main(int argc, char** argv) {
     }
 
     string temp_string;
-    cout << "Enter the number of message entries in the binary file:" << endl;
+    cout << "Enter the number of message entries in the binary file (must be > 0):" << endl;
     cin >> temp_string;
 
-    while (!CheckIfPositiveLong(temp_string, false)) {
-        cout << "Enter the number of message entries in the binary file:" << endl;
+    while (!CheckIfPositiveLong(temp_string, false) or stol(temp_string) == 0) {
+        cout << "Enter the number of message entries in the binary file (must be > 0):" << endl;
         cin >> temp_string;
     }
 
@@ -31,11 +31,11 @@ int main(int argc, char** argv) {
 
     MessageQueue queue(file_name, number_of_entries, true);
 
-    cout << "Enter the number of sender processes:" << endl;
+    cout << "Enter the number of sender processes (should be >= 0):" << endl;
     cin >> temp_string;
 
     while (!CheckIfUnsignedShort(temp_string, false)) {
-        cout << "Enter the number of sender processes:" << endl;
+        cout << "Enter the number of sender processes (should be >= 0):" << endl;
         cin >> temp_string;
     }
 
