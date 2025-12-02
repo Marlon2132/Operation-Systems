@@ -1,10 +1,21 @@
-#include <sstream>
-#include <iostream>
 #include "proc_utils.h"
+#include <iostream>
+#include <sstream>
+#include <cstdlib>
+#include <io.h>
 
-std::vector<PROCESS_INFORMATION> launchClients(int count, const std::string& clientExeName) {
+std::vector<PROCESS_INFORMATION> launchClients(int count, const std::string& clientExePath) {
     std::vector<PROCESS_INFORMATION> procs;
     procs.reserve(count);
+
+    if (_access(clientExePath.c_str(), 0) != 0) {
+        char cwd[260];
+        GetCurrentDirectoryA(sizeof(cwd), cwd);
+        std::cerr << "Client executable not found: " << clientExePath << "\n";
+        std::cerr << "Current dir: " << cwd << "\n";
+
+        return procs;
+    }
 
     for (int i = 0; i < count; ++i) {
         STARTUPINFOA si;
@@ -14,20 +25,25 @@ std::vector<PROCESS_INFORMATION> launchClients(int count, const std::string& cli
         ZeroMemory(&pi, sizeof(pi));
 
         std::ostringstream cmd;
-        cmd << "\"" << clientExeName << "\" " << i + 1;
-
+        cmd << "\"" << clientExePath << "\" " << (i + 1);
         std::string cmdStr = cmd.str();
         char* cmdLine = _strdup(cmdStr.c_str());
 
+        if (!cmdLine) {
+            std::cerr << "Memory allocation failed for command line\n";
+
+            continue;
+        }
+
         BOOL ok = CreateProcessA(
-            NULL,           // lpApplicationName
-            cmdLine,        // lpCommandLine
-            NULL,           // lpProcessAttributes
-            NULL,           // lpThreadAttributes
-            FALSE,          // bInheritHandles
-            0,              // dwCreationFlags
-            NULL,           // lpEnvironment
-            NULL,           // lpCurrentDirectory (NULL = current)
+            clientExePath.c_str(),
+            cmdLine,
+            NULL,
+            NULL,
+            FALSE,
+            CREATE_NEW_CONSOLE,
+            NULL,
+            NULL,
             &si,
             &pi
         );
@@ -54,6 +70,7 @@ void waitForClientsAndClose(std::vector<PROCESS_INFORMATION>& procs) {
 
     std::vector<HANDLE> handles;
     handles.reserve(procs.size());
+
     for (auto& pi : procs) {
         handles.push_back(pi.hProcess);
     }
@@ -75,8 +92,13 @@ void waitForClientsAndClose(std::vector<PROCESS_INFORMATION>& procs) {
     }
 
     for (auto& pi : procs) {
-        CloseHandle(pi.hProcess);
-        CloseHandle(pi.hThread);
+        if (pi.hProcess) {
+            CloseHandle(pi.hProcess);
+        }
+
+        if (pi.hThread) {
+            CloseHandle(pi.hThread);
+        }
     }
 
     procs.clear();

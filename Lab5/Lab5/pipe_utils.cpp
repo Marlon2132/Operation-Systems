@@ -1,7 +1,7 @@
 #include "pipe_utils.h"
 #include <iostream>
 
-HANDLE createServerPipe(const char* pipeName) {
+HANDLE createServerPipeInstance(const char* pipeName) {
     HANDLE hPipe = CreateNamedPipeA(
         pipeName,
         PIPE_ACCESS_DUPLEX,
@@ -18,21 +18,20 @@ HANDLE createServerPipe(const char* pipeName) {
     return hPipe;
 }
 
-HANDLE waitForClientConnect(HANDLE hPipe) {
+bool waitForClientConnect(HANDLE hPipe) {
     if (hPipe == INVALID_HANDLE_VALUE) {
-        return INVALID_HANDLE_VALUE;
+        return false;
     }
 
     BOOL connected = ConnectNamedPipe(hPipe, NULL) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
 
     if (!connected) {
         std::cerr << "ConnectNamedPipe failed or client not connected: " << GetLastError() << "\n";
-        CloseHandle(hPipe);
 
-        return INVALID_HANDLE_VALUE;
+        return false;
     }
 
-    return hPipe;
+    return true;
 }
 
 HANDLE connectToServerPipe(const char* pipeName, DWORD timeoutMs) {

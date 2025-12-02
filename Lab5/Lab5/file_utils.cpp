@@ -1,5 +1,6 @@
 #include "file_utils.h"
 #include <iostream>
+#include <cstring>
 
 bool writeEmployeesToFile(const char* filename, const std::vector<employee>& v) {
     HANDLE h = CreateFileA(filename, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -12,7 +13,7 @@ bool writeEmployeesToFile(const char* filename, const std::vector<employee>& v) 
 
     DWORD written;
 
-    if (!WriteFile(h, v.data(), (DWORD)(v.size() * sizeof(employee)), &written, NULL)) {
+    if (!WriteFile(h, v.data(), (DWORD)(v.size() * sizeof(employee)), &written, NULL) or written != v.size() * sizeof(employee)) {
         std::cerr << "WriteFile failed: " << GetLastError() << "\n";
         CloseHandle(h);
 
@@ -46,7 +47,7 @@ bool printFileContents(const char* filename) {
     std::vector<employee> buf(count);
     DWORD read;
 
-    if (!ReadFile(h, buf.data(), (DWORD)(count * sizeof(employee)), &read, NULL)) {
+    if (!ReadFile(h, buf.data(), (DWORD)(count * sizeof(employee)), &read, NULL) or read != count * sizeof(employee)) {
         std::cerr << "ReadFile failed: " << GetLastError() << "\n";
         CloseHandle(h);
 
@@ -69,7 +70,6 @@ bool findRecordOffset(const char* filename, int id, LARGE_INTEGER& offset) {
 
     if (h == INVALID_HANDLE_VALUE) {
         std::cerr << "Open file for find failed: " << GetLastError() << "\n";
-
         return false;
     }
 
@@ -77,7 +77,7 @@ bool findRecordOffset(const char* filename, int id, LARGE_INTEGER& offset) {
     employee e;
     LARGE_INTEGER pos; pos.QuadPart = 0;
 
-    while (ReadFile(h, &e, sizeof(employee), &read, NULL) && read == sizeof(employee)) {
+    while (ReadFile(h, &e, sizeof(employee), &read, NULL) and read == sizeof(employee)) {
         if (e.num == id) {
             offset = pos;
             CloseHandle(h);
@@ -96,13 +96,15 @@ bool findRecordOffset(const char* filename, int id, LARGE_INTEGER& offset) {
 bool readRecordAtOffset(HANDLE hFile, const LARGE_INTEGER& offset, employee& out) {
     if (!SetFilePointerEx(hFile, offset, NULL, FILE_BEGIN)) {
         std::cerr << "SetFilePointerEx failed: " << GetLastError() << "\n";
+
         return false;
     }
 
     DWORD rd;
 
-    if (!ReadFile(hFile, &out, sizeof(out), &rd, NULL) || rd != sizeof(out)) {
+    if (!ReadFile(hFile, &out, sizeof(out), &rd, NULL) or rd != sizeof(out)) {
         std::cerr << "ReadFile record failed: " << GetLastError() << "\n";
+
         return false;
     }
 
@@ -112,13 +114,15 @@ bool readRecordAtOffset(HANDLE hFile, const LARGE_INTEGER& offset, employee& out
 bool writeRecordAtOffset(HANDLE hFile, const LARGE_INTEGER& offset, const employee& in) {
     if (!SetFilePointerEx(hFile, offset, NULL, FILE_BEGIN)) {
         std::cerr << "SetFilePointerEx failed: " << GetLastError() << "\n";
+
         return false;
     }
 
     DWORD wr;
 
-    if (!WriteFile(hFile, &in, sizeof(in), &wr, NULL) || wr != sizeof(in)) {
+    if (!WriteFile(hFile, &in, sizeof(in), &wr, NULL) or wr != sizeof(in)) {
         std::cerr << "WriteFile record failed: " << GetLastError() << "\n";
+
         return false;
     }
 
