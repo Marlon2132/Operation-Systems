@@ -1,49 +1,56 @@
-﻿cmake_minimum_required(VERSION 3.12)
-
+﻿cmake_minimum_required(VERSION 3.14)
 project(Lab5 LANGUAGES CXX)
 
-# Используем C++20
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Общая папка с исходниками (текущая)
-set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-
-# Списки исходников
-set(SERVER_SOURCES
-    ${SRC_DIR}/Server.cpp
-    ${SRC_DIR}/file_utils.cpp
-    ${SRC_DIR}/lock_utils.cpp
-    ${SRC_DIR}/pipe_utils.cpp
-    ${SRC_DIR}/proc_utils.cpp
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/v1.17.0.zip
 )
 
-set(CLIENT_SOURCES
-    ${SRC_DIR}/Client.cpp
-    ${SRC_DIR}/file_utils.cpp
-    ${SRC_DIR}/lock_utils.cpp
-    ${SRC_DIR}/pipe_utils.cpp
-    ${SRC_DIR}/proc_utils.cpp
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+
+add_library(utils STATIC
+    file_utils.cpp
+    lock_utils.cpp
+    pipe_utils.cpp
+    proc_utils.cpp
 )
 
-# Создаём два исполняемых файла: Server и Client
-add_executable(Server ${SERVER_SOURCES})
-add_executable(Client ${CLIENT_SOURCES})
+target_include_directories(utils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/utils)
 
-# Указываем директорию с заголовками (если заголовки в корне проекта)
-target_include_directories(Server PRIVATE ${SRC_DIR})
-target_include_directories(Client PRIVATE ${SRC_DIR})
+add_executable(Server
+    Server.cpp
+)
+target_link_libraries(Server PRIVATE utils)
 
-# Опции компилятора для разных компиляторов
-if (MSVC)
-  target_compile_options(Server PRIVATE /W4 /EHsc)
-  target_compile_options(Client PRIVATE /W4 /EHsc)
-else()
-  target_compile_options(Server PRIVATE -Wall -Wextra -Wpedantic)
-  target_compile_options(Client PRIVATE -Wall -Wextra -Wpedantic)
-  # Если используете pthreads на POSIX-системах, раскомментируйте:
-  # find_package(Threads REQUIRED)
-  # target_link_libraries(Server PRIVATE Threads::Threads)
-  # target_link_libraries(Client PRIVATE Threads::Threads)
-endif()
+add_executable(Client
+    Client.cpp
+)
+target_link_libraries(Client PRIVATE utils)
+
+add_executable(Lab5Tests
+    tests/test_file_utils.cpp
+    tests/test_file_utils_extra.cpp
+    tests/test_lock_utils.cpp
+    tests/test_lock_utils_concurrency.cpp
+    tests/test_pipe_utils.cpp
+    tests/test_pipe_connect_timeout.cpp
+    tests/test_proc_utils.cpp
+    tests/test_integration_simulated.cpp
+)
+
+target_include_directories(Lab5Tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/utils)
+target_link_libraries(Lab5Tests
+    PRIVATE
+        utils
+        GTest::gtest_main
+)
+
+include(GoogleTest)
+gtest_discover_tests(Lab5Tests)

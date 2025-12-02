@@ -4,6 +4,10 @@
 #include <string>
 #include <thread>
 #include <conio.h>
+#include <shared_mutex>
+#include <unordered_map>
+#include <memory>
+#include <mutex>
 #include "common.h"
 #include "file_utils.h"
 #include "lock_utils.h"
@@ -14,6 +18,23 @@ using namespace std;
 
 const char* PIPE_NAME = R"(\\.\pipe\LibraryPipe)";
 const char* DATA_FILE = "employees.dat";
+
+static unordered_map<int, shared_ptr<shared_mutex>> recordLocks;
+static mutex locksMapMutex;
+
+static shared_ptr<shared_mutex> getLockForId(int id) {
+    lock_guard<mutex> g(locksMapMutex);
+    auto it = recordLocks.find(id);
+
+    if (it != recordLocks.end()) {
+        return it->second;
+    }
+
+    auto m = make_shared<shared_mutex>();
+    recordLocks[id] = m;
+
+    return m;
+}
 
 void sendWithHeader(HANDLE hPipe, uint16_t type, const void* payload, uint32_t length) {
     MsgHeader h = { type, 0, length };
@@ -94,17 +115,12 @@ void handleClient(HANDLE hPipe) {
         }
 
         if (req.op == OP_READ) {
-            if (!lockRangeShared(hFile, offset)) {
-                employee err = { -2, "", 0.0 };
-                sendWithHeader(hPipe, 4, &err, sizeof(err));
-
-                continue;
-            }
+            auto mtx = getLockForId(req.id);
+            shared_lock<shared_mutex> guard(*mtx);
 
             employee e;
 
             if (!readRecordAtOffset(hFile, offset, e)) {
-                unlockRange(hFile, offset);
                 employee err = { -2, "", 0.0 };
                 sendWithHeader(hPipe, 4, &err, sizeof(err));
 
@@ -116,8 +132,6 @@ void handleClient(HANDLE hPipe) {
             MsgHeader relh;
 
             if (!readHeader(hPipe, relh)) {
-                unlockRange(hFile, offset);
-
                 break;
             }
 
@@ -125,16 +139,7 @@ void handleClient(HANDLE hPipe) {
                 Request rel;
 
                 if (!readPayload(hPipe, &rel, sizeof(rel))) {
-                    unlockRange(hFile, offset);
-
                     break;
-                }
-
-                if (rel.op == OP_RELEASE) {
-                    unlockRange(hFile, offset);
-                }
-                else {
-                    unlockRange(hFile, offset);
                 }
             }
             else {
@@ -142,17 +147,12 @@ void handleClient(HANDLE hPipe) {
             }
         }
         else if (req.op == OP_MODIFY) {
-            if (!lockRangeExclusive(hFile, offset)) {
-                employee err = { -2, "", 0.0 };
-                sendWithHeader(hPipe, 4, &err, sizeof(err));
-
-                continue;
-            }
+            auto mtx = getLockForId(req.id);
+            unique_lock<shared_mutex> guard(*mtx);
 
             employee e;
 
             if (!readRecordAtOffset(hFile, offset, e)) {
-                unlockRange(hFile, offset);
                 employee err = { -2, "", 0.0 };
                 sendWithHeader(hPipe, 4, &err, sizeof(err));
 
@@ -164,8 +164,6 @@ void handleClient(HANDLE hPipe) {
             MsgHeader nextH;
 
             if (!readHeader(hPipe, nextH)) {
-                unlockRange(hFile, offset);
-
                 break;
             }
 
@@ -173,8 +171,6 @@ void handleClient(HANDLE hPipe) {
                 Request nextReq;
 
                 if (!readPayload(hPipe, &nextReq, sizeof(nextReq))) {
-                    unlockRange(hFile, offset);
-
                     break;
                 }
 
@@ -182,8 +178,6 @@ void handleClient(HANDLE hPipe) {
                     MsgHeader recH;
 
                     if (!readHeader(hPipe, recH)) {
-                        unlockRange(hFile, offset);
-
                         break;
                     }
 
@@ -191,18 +185,20 @@ void handleClient(HANDLE hPipe) {
                         employee ne;
 
                         if (!readPayload(hPipe, &ne, sizeof(ne))) {
-                            unlockRange(hFile, offset);
-
                             break;
                         }
 
-                        writeRecordAtOffset(hFile, offset, ne);
+                        if (!writeRecordAtOffset(hFile, offset, ne)) {
+                            employee err = { -2, "", 0.0 };
+                            sendWithHeader(hPipe, 4, &err, sizeof(err));
+
+                            continue;
+                        }
+
                         sendWithHeader(hPipe, 3, &ne, sizeof(ne));
                         MsgHeader relH;
 
                         if (!readHeader(hPipe, relH)) {
-                            unlockRange(hFile, offset);
-
                             break;
                         }
 
@@ -210,35 +206,23 @@ void handleClient(HANDLE hPipe) {
                             Request rel;
 
                             if (!readPayload(hPipe, &rel, sizeof(rel))) {
-                                unlockRange(hFile, offset);
-
                                 break;
                             }
-
-                            if (rel.op == OP_RELEASE) {
-                                unlockRange(hFile, offset);
-                            }
-                            else {
-                                unlockRange(hFile, offset);
-                            }
-                        }
-                        else {
-                            unlockRange(hFile, offset);
                         }
                     }
                     else {
-                        unlockRange(hFile, offset);
+                        cerr << "Expected employee payload but got different header" << endl;
                     }
                 }
                 else if (nextReq.op == OP_RELEASE) {
-                    unlockRange(hFile, offset);
+
                 }
                 else {
-                    unlockRange(hFile, offset);
+                    cerr << "Unexpected request after MODIFY: op=" << nextReq.op << endl;
                 }
             }
             else {
-                unlockRange(hFile, offset);
+                cerr << "Unexpected header after sending record (expected Request)" << endl;
             }
         }
         else {
