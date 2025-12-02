@@ -43,4 +43,35 @@ int main() {
     }
 
     printFileContents(DATA_FILE);
+
+    while (true) {
+        HANDLE hPipe = createServerPipe(PIPE_NAME);
+
+        if (hPipe == INVALID_HANDLE_VALUE) {
+            return 1;
+        }
+
+        cout << "Waiting for client to connect..." << endl;
+
+        if (waitForClientConnect(hPipe) == INVALID_HANDLE_VALUE) {
+            continue;
+        }
+
+        cout << "Client connected, spawning thread..." << endl;
+
+        thread t(handleClient, hPipe);
+        t.detach();
+
+        if (_kbhit()) {
+            int c = _getch();
+
+            if (c == 'q' or c == 'Q') {
+                cout << "Server shutting down by user command." << endl;
+
+                break;
+            }
+        }
+    }
+
+    printFileContents(DATA_FILE);
 }
