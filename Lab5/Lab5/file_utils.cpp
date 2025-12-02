@@ -8,8 +8,8 @@ bool writeEmployeesToFile(const char* filename, const std::vector<employee>& v) 
         std::cerr << "CreateFileA failed: " << GetLastError() << "\n";
 
         return false;
-    
     }
+
     DWORD written;
 
     if (!WriteFile(h, v.data(), (DWORD)(v.size() * sizeof(employee)), &written, NULL)) {
