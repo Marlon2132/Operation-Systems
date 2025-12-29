@@ -10,6 +10,11 @@ ApiClient::ApiClient(QObject *parent)
 {
 }
 
+void ApiClient::setBaseUrl(const QString &url) {
+    m_base = url;
+}
+
+
 void ApiClient::handleReply(QNetworkReply *reply, std::function<void(QByteArray,int)> cb) {
     QByteArray data = reply->readAll();
     int code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();

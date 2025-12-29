@@ -2,6 +2,7 @@
 
 #include <QString>
 #include <QJsonObject>
+#include <QMetaType>
 
 class Task {
 public:
@@ -27,3 +28,5 @@ private:
     QString m_description;
     QString m_status;
 };
+
+Q_DECLARE_METATYPE(Task)

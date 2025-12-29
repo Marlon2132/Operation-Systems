@@ -2,73 +2,77 @@ cmake_minimum_required(VERSION 3.16)
 
 project(Kollok2 VERSION 0.1 LANGUAGES CXX)
 
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network)
+
+set(SRC_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+    ${SRC_ROOT}/main.cpp
+    ${SRC_ROOT}/mainwindow.cpp
+    ${SRC_ROOT}/mainwindow.h
+    ${SRC_ROOT}/mainwindow.ui
+
+    ${SRC_ROOT}/task.h
+    ${SRC_ROOT}/task.cpp
+
+    ${SRC_ROOT}/taskstore.h
+    ${SRC_ROOT}/taskstore.cpp
+
+    ${SRC_ROOT}/todoserver.h
+    ${SRC_ROOT}/todoserver.cpp
+
+    ${SRC_ROOT}/apiclient.h
+    ${SRC_ROOT}/apiclient.cpp
 )
+
+set(THIRDPARTY_DIR ${SRC_ROOT})
+if(EXISTS ${THIRDPARTY_DIR}/httplib.h)
+    list(APPEND PROJECT_SOURCES ${THIRDPARTY_DIR}/httplib.h)
+    set(HAS_HTTPLIB TRUE)
+else()
+    set(HAS_HTTPLIB FALSE)
+endif()
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(Kollok2
+    qt_add_executable(${PROJECT_NAME}
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        task.h task.cpp
-        taskstore.h taskstore.cpp
-        todoserver.h todoserver.cpp
-        apiclient.h apiclient.cpp
+        server_main.cpp
     )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET Kollok2 APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
-    if(ANDROID)
-        add_library(Kollok2 SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(Kollok2
-            ${PROJECT_SOURCES}
-        )
-    endif()
+    add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 endif()
 
-target_link_libraries(Kollok2 PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${SRC_ROOT}
+)
 
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
-# If you are developing for iOS or macOS you should consider setting an
-# explicit, fixed bundle identifier manually though.
-if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.Kollok2)
+if(HAS_HTTPLIB)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${THIRDPARTY_DIR})
 endif()
-set_target_properties(Kollok2 PROPERTIES
-    ${BUNDLE_ID_OPTION}
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Network
 )
 
-include(GNUInstallDirs)
-install(TARGETS Kollok2
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+if(WIN32)
+    set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE TRUE)
+endif()
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(Kollok2)
+    qt_finalize_executable(${PROJECT_NAME})
 endif()
+
+add_executable(Kollok2_server server_main.cpp todoserver.cpp taskstore.cpp task.cpp)
+target_link_libraries(Kollok2_server PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network)
+target_include_directories(Kollok2_server PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+

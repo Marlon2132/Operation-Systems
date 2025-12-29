@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QMap>
 #include <QList>
+#include <QJsonObject>
 #include <optional>
 #include "task.h"
 
