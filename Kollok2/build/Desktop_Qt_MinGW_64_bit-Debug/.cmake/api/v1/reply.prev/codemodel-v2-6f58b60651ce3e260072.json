@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-f021cc32e937b7277401.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Kollok2",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Kollok2::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Kollok2-Debug-c6454edffba94a8c1841.json",
+					"name" : "Kollok2",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Kollok2_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Kollok2_autogen-Debug-1eabdabb13d205a2503d.json",
+					"name" : "Kollok2_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Kollok2_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Kollok2_autogen_timestamp_deps-Debug-3bc0a3cb5f86f7b3cab8.json",
+					"name" : "Kollok2_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/\u0423\u043d\u0438\u0432\u0435\u0440/\u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b/\u041e\u0421/Operation-Systems/Kollok2/build/Desktop_Qt_MinGW_64_bit-Debug",
+		"source" : "D:/\u0423\u043d\u0438\u0432\u0435\u0440/\u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b/\u041e\u0421/Operation-Systems/Kollok2"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}
