@@ -300,6 +300,12 @@
 	"HEADERS" : 
 	[
 		[
+			"D:/\u0423\u043d\u0438\u0432\u0435\u0440/\u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b/\u041e\u0421/Operation-Systems/Kollok2/apiclient.h",
+			"MU",
+			"EWIEGA46WW/moc_apiclient.cpp",
+			null
+		],
+		[
 			"D:/\u0423\u043d\u0438\u0432\u0435\u0440/\u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b/\u041e\u0421/Operation-Systems/Kollok2/mainwindow.h",
 			"MU",
 			"EWIEGA46WW/moc_mainwindow.cpp",
@@ -315,6 +321,12 @@
 			"D:/\u0423\u043d\u0438\u0432\u0435\u0440/\u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b/\u041e\u0421/Operation-Systems/Kollok2/taskstore.h",
 			"MU",
 			"EWIEGA46WW/moc_taskstore.cpp",
+			null
+		],
+		[
+			"D:/\u0423\u043d\u0438\u0432\u0435\u0440/\u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b/\u041e\u0421/Operation-Systems/Kollok2/todoserver.h",
+			"MU",
+			"EWIEGA46WW/moc_todoserver.cpp",
 			null
 		]
 	],
@@ -390,6 +402,11 @@
 	"SOURCES" : 
 	[
 		[
+			"D:/\u0423\u043d\u0438\u0432\u0435\u0440/\u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b/\u041e\u0421/Operation-Systems/Kollok2/apiclient.cpp",
+			"MU",
+			null
+		],
+		[
 			"D:/\u0423\u043d\u0438\u0432\u0435\u0440/\u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b/\u041e\u0421/Operation-Systems/Kollok2/main.cpp",
 			"MU",
 			null
@@ -406,6 +423,11 @@
 		],
 		[
 			"D:/\u0423\u043d\u0438\u0432\u0435\u0440/\u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b/\u041e\u0421/Operation-Systems/Kollok2/taskstore.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/\u0423\u043d\u0438\u0432\u0435\u0440/\u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b/\u041e\u0421/Operation-Systems/Kollok2/todoserver.cpp",
 			"MU",
 			null
 		]

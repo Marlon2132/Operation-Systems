@@ -89,6 +89,22 @@ build CMakeFiles/Kollok2.dir/taskstore.cpp.obj: CXX_COMPILER__Kollok2_unscanned_
   OBJECT_DIR = CMakeFiles\Kollok2.dir
   OBJECT_FILE_DIR = CMakeFiles\Kollok2.dir
 
+build CMakeFiles/Kollok2.dir/todoserver.cpp.obj: CXX_COMPILER__Kollok2_unscanned_Debug D$:/Универ/Предметы/ОС/Operation-Systems/Kollok2/todoserver.cpp || cmake_object_order_depends_target_Kollok2
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\Kollok2.dir\todoserver.cpp.obj.d
+  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -ID:/Универ/Предметы/ОС/Operation-Systems/Kollok2/build/Desktop_Qt_MinGW_64_bit-Debug/Kollok2_autogen/include -isystem D:/Programmes/Qt/6.8.2/mingw_64/include/QtCore -isystem D:/Programmes/Qt/6.8.2/mingw_64/include -isystem D:/Programmes/Qt/6.8.2/mingw_64/mkspecs/win32-g++ -isystem D:/Programmes/Qt/6.8.2/mingw_64/include/QtWidgets -isystem D:/Programmes/Qt/6.8.2/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\Kollok2.dir
+  OBJECT_FILE_DIR = CMakeFiles\Kollok2.dir
+
+build CMakeFiles/Kollok2.dir/apiclient.cpp.obj: CXX_COMPILER__Kollok2_unscanned_Debug D$:/Универ/Предметы/ОС/Operation-Systems/Kollok2/apiclient.cpp || cmake_object_order_depends_target_Kollok2
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\Kollok2.dir\apiclient.cpp.obj.d
+  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -ID:/Универ/Предметы/ОС/Operation-Systems/Kollok2/build/Desktop_Qt_MinGW_64_bit-Debug/Kollok2_autogen/include -isystem D:/Programmes/Qt/6.8.2/mingw_64/include/QtCore -isystem D:/Programmes/Qt/6.8.2/mingw_64/include -isystem D:/Programmes/Qt/6.8.2/mingw_64/mkspecs/win32-g++ -isystem D:/Programmes/Qt/6.8.2/mingw_64/include/QtWidgets -isystem D:/Programmes/Qt/6.8.2/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\Kollok2.dir
+  OBJECT_FILE_DIR = CMakeFiles\Kollok2.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Kollok2
@@ -97,7 +113,7 @@ build CMakeFiles/Kollok2.dir/taskstore.cpp.obj: CXX_COMPILER__Kollok2_unscanned_
 #############################################
 # Link the executable Kollok2.exe
 
-build Kollok2.exe: CXX_EXECUTABLE_LINKER__Kollok2_Debug CMakeFiles/Kollok2.dir/Kollok2_autogen/mocs_compilation.cpp.obj CMakeFiles/Kollok2.dir/main.cpp.obj CMakeFiles/Kollok2.dir/mainwindow.cpp.obj CMakeFiles/Kollok2.dir/task.cpp.obj CMakeFiles/Kollok2.dir/taskstore.cpp.obj | D$:/Programmes/Qt/6.8.2/mingw_64/lib/libQt6Widgets.a D$:/Programmes/Qt/6.8.2/mingw_64/lib/libQt6Gui.a D$:/Programmes/Qt/6.8.2/mingw_64/lib/libQt6Core.a D$:/Programmes/Qt/6.8.2/mingw_64/lib/libQt6EntryPoint.a || Kollok2_autogen Kollok2_autogen_timestamp_deps
+build Kollok2.exe: CXX_EXECUTABLE_LINKER__Kollok2_Debug CMakeFiles/Kollok2.dir/Kollok2_autogen/mocs_compilation.cpp.obj CMakeFiles/Kollok2.dir/main.cpp.obj CMakeFiles/Kollok2.dir/mainwindow.cpp.obj CMakeFiles/Kollok2.dir/task.cpp.obj CMakeFiles/Kollok2.dir/taskstore.cpp.obj CMakeFiles/Kollok2.dir/todoserver.cpp.obj CMakeFiles/Kollok2.dir/apiclient.cpp.obj | D$:/Programmes/Qt/6.8.2/mingw_64/lib/libQt6Widgets.a D$:/Programmes/Qt/6.8.2/mingw_64/lib/libQt6Gui.a D$:/Programmes/Qt/6.8.2/mingw_64/lib/libQt6Core.a D$:/Programmes/Qt/6.8.2/mingw_64/lib/libQt6EntryPoint.a || Kollok2_autogen Kollok2_autogen_timestamp_deps
   FLAGS = -g
   LINK_FLAGS = -mwindows
   LINK_LIBRARIES = D:/Programmes/Qt/6.8.2/mingw_64/lib/libQt6Widgets.a  D:/Programmes/Qt/6.8.2/mingw_64/lib/libQt6Gui.a  D:/Programmes/Qt/6.8.2/mingw_64/lib/libQt6Core.a  -lmpr  -luserenv  -lmingw32  D:/Programmes/Qt/6.8.2/mingw_64/lib/libQt6EntryPoint.a  -lshell32  -ld3d11  -ldxgi  -ldxguid  -ld3d12  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
