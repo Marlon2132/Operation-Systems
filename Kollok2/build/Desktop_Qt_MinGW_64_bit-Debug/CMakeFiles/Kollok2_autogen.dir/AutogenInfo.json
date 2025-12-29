@@ -310,6 +310,12 @@
 			"MU",
 			"EWIEGA46WW/moc_task.cpp",
 			null
+		],
+		[
+			"D:/\u0423\u043d\u0438\u0432\u0435\u0440/\u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b/\u041e\u0421/Operation-Systems/Kollok2/taskstore.h",
+			"MU",
+			"EWIEGA46WW/moc_taskstore.cpp",
+			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
@@ -395,6 +401,11 @@
 		],
 		[
 			"D:/\u0423\u043d\u0438\u0432\u0435\u0440/\u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b/\u041e\u0421/Operation-Systems/Kollok2/task.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/\u0423\u043d\u0438\u0432\u0435\u0440/\u041f\u0440\u0435\u0434\u043c\u0435\u0442\u044b/\u041e\u0421/Operation-Systems/Kollok2/taskstore.cpp",
 			"MU",
 			null
 		]

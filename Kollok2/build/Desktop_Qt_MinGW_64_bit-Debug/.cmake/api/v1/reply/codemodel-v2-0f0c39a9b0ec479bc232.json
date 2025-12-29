@@ -7,7 +7,7 @@
 				{
 					"build" : ".",
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-Debug-f021cc32e937b7277401.json",
+					"jsonFile" : "directory-.-Debug-46ddd909b7379862b065.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.16"
@@ -44,7 +44,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "Kollok2::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-Kollok2-Debug-c6454edffba94a8c1841.json",
+					"jsonFile" : "target-Kollok2-Debug-eea0a68d25b8ce66f6b1.json",
 					"name" : "Kollok2",
 					"projectIndex" : 0
 				},
